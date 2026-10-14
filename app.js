@@ -24,7 +24,7 @@ var PERIODS = [
     color: "#c8eac0",
     startsAtHour: 12,
     tasks: [
-      { icon: "🥪", label: "Madpakke" },
+      { picture: "pictures/tom-madkasse.svg", label: "Madpakke" },
       { icon: "🍎", label: "Mellemmad" },
       { icon: "📚", label: "Lektier" },
       { icon: "🧸", label: "Leg" },
@@ -114,7 +114,7 @@ function render() {
       var key = period.id + "-" + task.label;
       var button = document.createElement("button");
       button.className = "task" + (done.keys[key] ? " done" : "");
-      button.innerHTML = '<span class="task-icon">' + task.icon + "</span>" +
+      button.innerHTML = '<span class="task-icon">' + (task.picture ? '<img src="' + task.picture + '" alt="">' : task.icon) + "</span>" +
         '<span class="task-label">' + task.label + "</span>";
       button.addEventListener("click", function () {
         var latest = loadDone();

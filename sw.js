@@ -2,7 +2,7 @@
 // the cache key. Plain ES2017 for iOS 12.
 var CACHE = "pictoskema";
 var NETWORK_TIMEOUT_IN_MS = 4000;
-var FILES = ["./", "index.html", "app.js", "style.css", "sealed.json", "manifest.json", "icon-180.png"];
+var FILES = ["./", "index.html", "app.js", "style.css", "sealed.json", "manifest.json", "icon-180.png", "pictures/tom-madkasse.svg"];
 
 function keyFor(url) {
   var clean = new URL(url, self.location.href);

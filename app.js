@@ -13,6 +13,7 @@ var PERIODS = [
       { icon: "👕", label: "Tøj på" },
       { icon: "🥣", label: "Morgenmad" },
       { icon: "🦷", label: "Børste tænder" },
+      { icon: "🥪", label: "Madpakke" },
       { icon: "🎒", label: "Taske" }
     ]
   },

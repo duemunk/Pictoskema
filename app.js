@@ -24,6 +24,7 @@ var PERIODS = [
     color: "#c8eac0",
     startsAtHour: 12,
     tasks: [
+      { icon: "🥪", label: "Madpakke" },
       { icon: "🍎", label: "Mellemmad" },
       { icon: "📚", label: "Lektier" },
       { icon: "🧸", label: "Leg" },

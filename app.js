@@ -125,40 +125,80 @@ function currentPeriodId() {
   return current;
 }
 
+var openPeriodId = null;
+
+function pictureFor(item) {
+  return item.picture ? '<img src="' + item.picture + '" alt="">' : item.icon;
+}
+
 function render() {
-  var done = loadDone();
   var frames = document.getElementById("frames");
-  var nowId = currentPeriodId();
   frames.innerHTML = "";
-  PERIODS.forEach(function (period) {
-    var frame = document.createElement("section");
-    frame.className = "frame" + (period.id === nowId ? " now" : "");
-    frame.style.background = period.color;
-    frame.innerHTML =
-      '<div class="frame-head"><span class="frame-icon">' + period.icon + "</span>" +
-      '<span class="frame-title">' + period.title + "</span></div>";
-    var tasks = document.createElement("div");
-    tasks.className = "tasks";
-    period.tasks.forEach(function (task) {
-      var key = period.id + "-" + task.label;
-      var button = document.createElement("button");
-      button.className = "task" + (done.keys[key] ? " done" : "");
-      button.innerHTML = '<span class="task-icon">' + (task.picture ? '<img src="' + task.picture + '" alt="">' : task.icon) + "</span>" +
-        '<span class="task-label">' + task.label + "</span>";
-      button.addEventListener("click", function () {
-        var latest = loadDone();
-        latest.keys[key] = !latest.keys[key];
-        saveDone(latest);
-        button.className = "task" + (latest.keys[key] ? " done" : "");
-        if (latest.keys[key]) playFanfare();
-        addStars(latest.keys[key] ? 1 : -1);
-      });
-      tasks.appendChild(button);
-    });
-    frame.appendChild(tasks);
-    frames.appendChild(frame);
-  });
+  var open = PERIODS.filter(function (period) { return period.id === openPeriodId; })[0];
+  if (open) renderPeriod(frames, open);
+  else renderOverview(frames);
   showStars(false);
+}
+
+function renderOverview(frames) {
+  var done = loadDone();
+  var nowId = currentPeriodId();
+  frames.className = "frames";
+  PERIODS.forEach(function (period) {
+    var doneCount = period.tasks.filter(function (task) { return done.keys[period.id + "-" + task.label]; }).length;
+    var button = document.createElement("button");
+    button.className = "period" + (period.id === nowId ? " now" : "");
+    button.style.background = period.color;
+    button.innerHTML = '<span class="period-icon">' + period.icon + "</span>" +
+      '<span class="period-title">' + period.title + "</span>" +
+      '<span class="period-progress">⭐ ' + doneCount + " / " + period.tasks.length + "</span>";
+    button.addEventListener("click", function () {
+      openPeriodId = period.id;
+      render();
+    });
+    frames.appendChild(button);
+  });
+}
+
+function renderPeriod(frames, period) {
+  var done = loadDone();
+  frames.className = "frames open";
+  var frame = document.createElement("section");
+  frame.className = "frame";
+  frame.style.background = period.color;
+  var head = document.createElement("div");
+  head.className = "frame-head";
+  head.innerHTML = '<span class="frame-icon">' + period.icon + "</span>" +
+    '<span class="frame-title">' + period.title + "</span>";
+  var back = document.createElement("button");
+  back.className = "small-button back";
+  back.textContent = "⬅️ Tilbage";
+  back.addEventListener("click", function () {
+    openPeriodId = null;
+    render();
+  });
+  head.insertBefore(back, head.firstChild);
+  frame.appendChild(head);
+  var tasks = document.createElement("div");
+  tasks.className = "tasks";
+  period.tasks.forEach(function (task) {
+    var key = period.id + "-" + task.label;
+    var button = document.createElement("button");
+    button.className = "task" + (done.keys[key] ? " done" : "");
+    button.innerHTML = '<span class="task-icon">' + pictureFor(task) + "</span>" +
+      '<span class="task-label">' + task.label + "</span>";
+    button.addEventListener("click", function () {
+      var latest = loadDone();
+      latest.keys[key] = !latest.keys[key];
+      saveDone(latest);
+      button.className = "task" + (latest.keys[key] ? " done" : "");
+      if (latest.keys[key]) playFanfare();
+      addStars(latest.keys[key] ? 1 : -1);
+    });
+    tasks.appendChild(button);
+  });
+  frame.appendChild(tasks);
+  frames.appendChild(frame);
 }
 
 render();

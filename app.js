@@ -41,8 +41,7 @@ var PERIODS = [
       { icon: "🍽️", label: "Aftensmad" },
       { icon: "👚", label: "Nattøj" },
       { icon: "🦷", label: "Børste tænder" },
-      { icon: "📖", label: "Godnathistorie" },
-      { icon: "😴", label: "Sove" }
+      { icon: "🚽", label: "Toilet" }
     ]
   }
 ];

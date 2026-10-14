@@ -38,7 +38,6 @@ var PERIODS = [
     startsAtHour: 17,
     tasks: [
       { icon: "🍽️", label: "Aftensmad" },
-      { icon: "🛁", label: "Bad" },
       { icon: "👚", label: "Nattøj" },
       { icon: "🦷", label: "Børste tænder" },
       { icon: "📖", label: "Godnathistorie" },
@@ -67,6 +66,28 @@ function saveDone(done) {
   try { localStorage.setItem(DONE_STORAGE, JSON.stringify(done)); } catch (e) {}
 }
 
+// Stars are kept across days: one for every pictogram done, taken back when it is undone.
+var STARS_STORAGE = "pictoskema-stars";
+
+function loadStars() {
+  try { return parseInt(localStorage.getItem(STARS_STORAGE), 10) || 0; } catch (e) { return 0; }
+}
+
+function addStars(change) {
+  var stars = Math.max(0, loadStars() + change);
+  try { localStorage.setItem(STARS_STORAGE, String(stars)); } catch (e) {}
+  showStars(change > 0);
+}
+
+function showStars(pop) {
+  var counter = document.getElementById("stars");
+  counter.textContent = "⭐ " + loadStars();
+  if (!pop) return;
+  counter.className = "stars";
+  void counter.offsetWidth;
+  counter.className = "stars pop";
+}
+
 function currentPeriodId() {
   var hour = new Date().getHours();
   var current = PERIODS[0].id;
@@ -88,8 +109,8 @@ function render() {
       '<span class="frame-title">' + period.title + "</span></div>";
     var tasks = document.createElement("div");
     tasks.className = "tasks";
-    period.tasks.forEach(function (task, index) {
-      var key = period.id + "-" + index;
+    period.tasks.forEach(function (task) {
+      var key = period.id + "-" + task.label;
       var button = document.createElement("button");
       button.className = "task" + (done.keys[key] ? " done" : "");
       button.innerHTML = '<span class="task-icon">' + task.icon + "</span>" +
@@ -99,12 +120,14 @@ function render() {
         latest.keys[key] = !latest.keys[key];
         saveDone(latest);
         button.className = "task" + (latest.keys[key] ? " done" : "");
+        addStars(latest.keys[key] ? 1 : -1);
       });
       tasks.appendChild(button);
     });
     frame.appendChild(tasks);
     frames.appendChild(frame);
   });
+  showStars(false);
 }
 
 render();

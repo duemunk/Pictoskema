@@ -100,9 +100,20 @@ h1 { margin: 0; font-size: 34px; text-align: center; flex: 1; }
 }
 .task-icon { display: block; font-size: 52px; line-height: 1.15; }
 .task-label { display: block; font-size: 17px; margin-top: 4px; }
-.task.done { opacity: 0.45; }
+.stars {
+  display: inline-block;
+  margin-right: 12px;
+  font-size: 34px;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+}
+.stars.pop { -webkit-animation: pop 0.5s; animation: pop 0.5s; }
+@-webkit-keyframes pop { 50% { -webkit-transform: scale(1.5); } }
+@keyframes pop { 50% { transform: scale(1.5); } }
+
+.task.done { opacity: 0.55; }
 .task.done:after {
-  content: "✔️";
+  content: "⭐";
   position: absolute;
   top: 4px;
   right: 6px;

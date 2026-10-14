@@ -79,6 +79,36 @@ function addStars(change) {
   showStars(change > 0);
 }
 
+// A short rising fanfare, synthesized so there is no sound file. iOS only allows audio that
+// starts from a tap, so the context is created on the first tap.
+var audio = null;
+var FANFARE_IN_HZ = [523.25, 659.25, 783.99, 1046.5];
+var NOTE_IN_SECONDS = 0.09;
+
+function playFanfare() {
+  var AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!audio && AudioContext) audio = new AudioContext();
+  if (!audio) return;
+  if (audio.resume) audio.resume();
+  var start = audio.currentTime + 0.02;
+  FANFARE_IN_HZ.forEach(function (frequency, index) {
+    var isLast = index === FANFARE_IN_HZ.length - 1;
+    var at = start + index * NOTE_IN_SECONDS;
+    var length = isLast ? 0.45 : NOTE_IN_SECONDS * 1.4;
+    var oscillator = audio.createOscillator();
+    var gain = audio.createGain();
+    oscillator.type = "triangle";
+    oscillator.frequency.setValueAtTime(frequency, at);
+    gain.gain.setValueAtTime(0.0001, at);
+    gain.gain.exponentialRampToValueAtTime(0.35, at + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, at + length);
+    oscillator.connect(gain);
+    gain.connect(audio.destination);
+    oscillator.start(at);
+    oscillator.stop(at + length + 0.05);
+  });
+}
+
 function showStars(pop) {
   var counter = document.getElementById("stars");
   counter.textContent = "⭐ " + loadStars();
@@ -120,6 +150,7 @@ function render() {
         latest.keys[key] = !latest.keys[key];
         saveDone(latest);
         button.className = "task" + (latest.keys[key] ? " done" : "");
+        if (latest.keys[key]) playFanfare();
         addStars(latest.keys[key] ? 1 : -1);
       });
       tasks.appendChild(button);

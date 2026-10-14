@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Pictoskema">
+  <meta name="theme-color" content="#fdf6ec">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="manifest" href="manifest.json">
+  <title>Pictoskema</title>
+  <script>document.write('<link rel="stylesheet" href="style.css?v=' + Date.now() + '">');</script>
+</head>
+<body>
+  <header class="top">
+    <button id="refresh" class="small-button">🔄 Opdater</button>
+    <h1>Hverdagen<span class="private" data-private="greeting"></span></h1>
+    <button id="unlock" class="small-button">🔑 Kode</button>
+  </header>
+  <div id="code-panel" class="code-panel">
+    <input id="code" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="6 cifre" autocomplete="off">
+    <button id="code-ok" class="small-button">Lås op</button>
+    <p id="code-message"></p>
+  </div>
+  <main id="frames" class="frames"></main>
+  <script>document.write('<script src="app.js?v=' + Date.now() + '"><\/script>');</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "Pictoskema",
+  "short_name": "Pictoskema",
+  "description": "Hverdagens gøremål i piktogrammer",
+  "lang": "da",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#fdf6ec",
+  "theme_color": "#fdf6ec",
+  "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
+}
